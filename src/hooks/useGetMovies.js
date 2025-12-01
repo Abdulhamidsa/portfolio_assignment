@@ -9,7 +9,7 @@ const useGetMovies = () => {
     const fetchMovies = async () => {
       try {
         setLoading(true);
-        const response = await fetch(ENDPOINTS.GET_ALL_TITLES);
+        const response = await fetch(ENDPOINTS.get.GET_ALL_TITLES);
 
         if (!response.ok) {
           throw new Error("Failed to fetch movies");
