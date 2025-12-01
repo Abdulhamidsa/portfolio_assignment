@@ -1,14 +1,11 @@
 import "./App.css";
-import { Button } from "react-bootstrap";
-import Accordion from "react-bootstrap/Accordion";
-import BasicExample from "./components/BasicExample.jsx";
+import useGetMovies from "./hooks/useGetMovies";
 
 function App() {
-  return (
-    <>
-      <BasicExample />
-    </>
-  );
+  const { movies } = useGetMovies();
+  console.log(movies);
+
+  return <></>;
 }
 
 export default App;
