@@ -1,13 +1,17 @@
 import "./App.css";
 import AuthProvider from "./context/AuthContext";
-import AuthExample from "./components/AuthExample";
+import useGetMovies from "./hooks/useGetMovies";
+import { Routes, Route } from "react-router-dom";
+import Home from "./pages/home";
+import About from "./pages/about";
 
 function App() {
   return (
     <AuthProvider>
-      <div className="App">
-        <AuthExample />
-      </div>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+      </Routes>
     </AuthProvider>
   );
 }
