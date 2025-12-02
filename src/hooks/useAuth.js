@@ -1,37 +1,42 @@
-import { useState, useEffect, useCallback } from "react";
-import Cookies from "js-cookie";
+import { useState, useCallback, useEffect } from "react";
 import { ENDPOINTS } from "../util/endpoints";
-
-const TOKEN_COOKIE_NAME = "auth_token";
-const USER_COOKIE_NAME = "auth_user";
-const COOKIE_EXPIRES_DAYS = 7; // Token expires in 7 days
 
 const useAuth = () => {
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true); // start true so we check /me first
   const [error, setError] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  // Initialize auth state from cookies
-  useEffect(() => {
-    const storedToken = Cookies.get(TOKEN_COOKIE_NAME);
-    const storedUser = Cookies.get(USER_COOKIE_NAME);
+  const checkAuth = useCallback(async () => {
+    try {
+      setLoading(true);
 
-    if (storedToken && storedUser) {
-      try {
-        setToken(storedToken);
-        setUser(JSON.parse(storedUser));
-      } catch (err) {
-        console.error("Error parsing stored user data:", err);
-        // Clear invalid cookies
-        Cookies.remove(TOKEN_COOKIE_NAME);
-        Cookies.remove(USER_COOKIE_NAME);
+      const res = await fetch(ENDPOINTS.get.GET_CURRENT_USER, {
+        credentials: "include",
+      });
+
+      if (res.ok) {
+        const json = await res.json();
+        setUser(json.data);
+        setIsAuthenticated(true);
+      } else {
+        setUser(null);
+        setIsAuthenticated(false);
       }
+    } catch (err) {
+      setUser(null);
+      setIsAuthenticated(false);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }, []);
 
-  // Login function
+  // 🔁 Run once when app loads
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
+
+  // 🔐 Login
   const login = useCallback(async (emailOrUsername, password) => {
     try {
       setLoading(true);
@@ -42,37 +47,34 @@ const useAuth = () => {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify({ emailOrUsername, password }),
       });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Login failed");
+      const json = await response.json();
+
+      if (!response.ok || !json.success) {
+        throw new Error(json.message || "Login failed");
       }
 
-      const data = await response.json();
+      console.log("Login response data:", json.data);
 
-      // Assuming the API returns { token, user } or similar structure
-      const { token: authToken, user: userData } = data;
+      const { userId, email, username } = json.data;
+      setUser({ userId, email, username });
+      setIsAuthenticated(true);
 
-      // Store token and user data in cookies
-      Cookies.set(TOKEN_COOKIE_NAME, authToken, { expires: COOKIE_EXPIRES_DAYS });
-      Cookies.set(USER_COOKIE_NAME, JSON.stringify(userData), { expires: COOKIE_EXPIRES_DAYS });
-
-      // Update state
-      setToken(authToken);
-      setUser(userData);
-
-      return { success: true, data };
+      return { success: true };
     } catch (err) {
       setError(err.message);
+      setIsAuthenticated(false);
+      setUser(null);
       return { success: false, error: err.message };
     } finally {
       setLoading(false);
     }
   }, []);
 
-  // Register function
+  // 🧾 Register
   const register = useCallback(async (userData) => {
     try {
       setLoading(true);
@@ -80,110 +82,91 @@ const useAuth = () => {
 
       const response = await fetch(ENDPOINTS.post.REGISTER, {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(userData),
       });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Registration failed");
+      const json = await response.json();
+
+      if (!response.ok || !json.success) {
+        throw new Error(json.message || "Registration failed");
       }
 
-      const data = await response.json();
-
-      // Assuming the API returns { token, user } after registration
-      // If not, you might need to automatically login after registration
-      const { token: authToken, user: newUser } = data;
-
-      if (authToken && newUser) {
-        // Store token and user data in cookies
-        Cookies.set(TOKEN_COOKIE_NAME, authToken, { expires: COOKIE_EXPIRES_DAYS });
-        Cookies.set(USER_COOKIE_NAME, JSON.stringify(newUser), { expires: COOKIE_EXPIRES_DAYS });
-
-        // Update state
-        setToken(authToken);
-        setUser(newUser);
+      if (json.data && json.data.userId) {
+        const { userId, email, username } = json.data;
+        setUser({ userId, email, username });
+        setIsAuthenticated(true);
       }
 
-      return { success: true, data };
+      return { success: true };
     } catch (err) {
       setError(err.message);
+      setIsAuthenticated(false);
+      setUser(null);
       return { success: false, error: err.message };
     } finally {
       setLoading(false);
     }
   }, []);
 
-  // Logout function
-  const logout = useCallback(() => {
-    // Remove cookies
-    Cookies.remove(TOKEN_COOKIE_NAME);
-    Cookies.remove(USER_COOKIE_NAME);
+  // 🚪 Logout
+  const logout = useCallback(async () => {
+    try {
+      await fetch(ENDPOINTS.post.LOGOUT, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    } catch {
+      error;
+    }
 
-    // Clear state
-    setToken(null);
     setUser(null);
     setError(null);
+    setIsAuthenticated(false);
   }, []);
 
-  // Function to make authenticated API calls
-  const authenticatedFetch = useCallback(
-    async (url, options = {}) => {
-      if (!token) {
-        throw new Error("No authentication token available");
-      }
-
-      const authHeaders = {
-        ...options.headers,
-        Authorization: `Bearer ${token}`,
+  // 🌐 API fetch wrapper with auto-logout on expired cookie
+  const authenticatedFetch = useCallback(async (url, options = {}) => {
+    const res = await fetch(url, {
+      ...options,
+      credentials: "include",
+      headers: {
         "Content-Type": "application/json",
-      };
+        ...(options.headers || {}),
+      },
+    });
 
-      return fetch(url, {
-        ...options,
-        headers: authHeaders,
-      });
-    },
-    [token]
-  );
+    if (res.status === 401) {
+      // token expired or invalid
+      setUser(null);
+      setIsAuthenticated(false);
+    }
 
-  // Check if user is authenticated
-  const isAuthenticated = Boolean(token && user);
-
-  // Get current user info
-  const getCurrentUser = useCallback(() => {
-    return user;
-  }, [user]);
-
-  // Update user data (useful for profile updates)
-  const updateUser = useCallback((updatedUser) => {
-    setUser(updatedUser);
-    Cookies.set(USER_COOKIE_NAME, JSON.stringify(updatedUser), { expires: COOKIE_EXPIRES_DAYS });
+    return res;
   }, []);
 
-  // Clear error
-  const clearError = useCallback(() => {
-    setError(null);
-  }, []);
+  const getCurrentUser = useCallback(() => user, [user]);
+  const updateUser = useCallback((u) => setUser(u), []);
+  const clearError = useCallback(() => setError(null), []);
 
   return {
-    // State
     user,
-    token,
     loading,
     error,
     isAuthenticated,
-
-    // Actions
     login,
     register,
     logout,
+    authenticatedFetch,
     getCurrentUser,
     updateUser,
     clearError,
-    authenticatedFetch,
   };
 };
 
