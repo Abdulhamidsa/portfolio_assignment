@@ -1,5 +1,5 @@
-function Product() {
-  return <div>Product</div>;
+function Profile() {
+  return <div className="container mt-5">Profile</div>;
 }
 
-export default Product;
+export default Profile;

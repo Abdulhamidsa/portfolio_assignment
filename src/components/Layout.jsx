@@ -1,10 +1,10 @@
-import React from "react";
-import useAuth from "../hooks/useAuth";
+// import React from "react";
+// import useAuth from "../hooks/useAuth";
 
-function Layout({ children }) {
-  const { loading, isAuthenticated } = useAuth();
+// function Layout({ children }) {
+//   const { loading, isAuthenticated } = useAuth();
 
-  return <>{children}</>;
-}
+//   return <>{children}</>;
+// }
 
-export default Layout;
+// export default Layout;

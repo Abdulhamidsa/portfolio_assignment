@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Button, Form, Alert, Spinner, Card, Container, Row, Col } from "react-bootstrap";
 import useAuth from "../hooks/useAuth";
 import "./AuthExample.css";
+import { useNavigate } from "react-router-dom";
 
 // Custom styles for dark theme
 const darkStyles = {
@@ -62,7 +63,9 @@ const darkStyles = {
 };
 
 const AuthExample = () => {
-  const { user, loading, error, isAuthenticated, login, register, logout, clearError } = useAuth();
+  const navigate = useNavigate();
+
+    const { user, loading, error, isAuthenticated, login, register, logout, clearError } = useAuth();
 
   const [formData, setFormData] = useState({
     email: "a@a.com",
@@ -87,8 +90,9 @@ const AuthExample = () => {
 
     if (isLoginMode) {
       const result = await login(formData.emailOrUsername, formData.password);
+      console.log("Login result:", result.success);
       if (result.success) {
-        console.log("Login successful:", result.success);
+        navigate("/about");
       }
     } else {
       // Registration mode
@@ -105,7 +109,7 @@ const AuthExample = () => {
 
       const result = await register(userData);
       if (result.success) {
-        console.log("Registration successful:", result.data);
+        console.log("Registration successful");
       }
     }
   };

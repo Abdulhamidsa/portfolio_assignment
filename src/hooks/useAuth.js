@@ -1,42 +1,55 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useContext, createContext, useEffect } from "react";
 import { ENDPOINTS } from "../util/endpoints";
+
+export const AuthContext = createContext();
+
+export const useAuthContext = () => {
+  const ctx = useContext(AuthContext);
+  if (!ctx) {
+    throw new Error("useAuthContext must be used inside <AuthProvider>");
+  }
+  return ctx;
+};
 
 const useAuth = () => {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true); // start true so we check /me first
+  const [loading, setLoading] = useState(true); // <--- IMPORTANT FIX
   const [error, setError] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  const checkAuth = useCallback(async () => {
-    try {
-      setLoading(true);
+  // AUTO LOGIN ON PAGE LOAD
+  useEffect(() => {
+    const checkSession = async () => {
+      try {
+        const res = await fetch(ENDPOINTS.get.GET_CURRENT_USER, {
+          method: "GET",
+          credentials: "include",
+        });
 
-      const res = await fetch(ENDPOINTS.get.GET_CURRENT_USER, {
-        credentials: "include",
-      });
+        if (!res.ok) {
+          setIsAuthenticated(false);
+          setUser(null);
+          return;
+        }
 
-      if (res.ok) {
         const json = await res.json();
-        setUser(json.data);
-        setIsAuthenticated(true);
-      } else {
-        setUser(null);
+
+        if (json.success) {
+          setUser(json.data);
+          setIsAuthenticated(true);
+        }
+      } catch (err) {
         setIsAuthenticated(false);
+        setUser(null);
+      } finally {
+        setLoading(false);
       }
-    } catch (err) {
-      setUser(null);
-      setIsAuthenticated(false);
-    } finally {
-      setLoading(false);
-    }
+    };
+
+    checkSession();
   }, []);
 
-  // 🔁 Run once when app loads
-  useEffect(() => {
-    checkAuth();
-  }, [checkAuth]);
-
-  // 🔐 Login
+  // LOGIN
   const login = useCallback(async (emailOrUsername, password) => {
     try {
       setLoading(true);
@@ -44,9 +57,7 @@ const useAuth = () => {
 
       const response = await fetch(ENDPOINTS.post.LOGIN, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         credentials: "include",
         body: JSON.stringify({ emailOrUsername, password }),
       });
@@ -56,8 +67,6 @@ const useAuth = () => {
       if (!response.ok || !json.success) {
         throw new Error(json.message || "Login failed");
       }
-
-      console.log("Login response data:", json.data);
 
       const { userId, email, username } = json.data;
       setUser({ userId, email, username });
@@ -74,7 +83,7 @@ const useAuth = () => {
     }
   }, []);
 
-  // 🧾 Register
+  // REGISTER
   const register = useCallback(async (userData) => {
     try {
       setLoading(true);
@@ -83,9 +92,7 @@ const useAuth = () => {
       const response = await fetch(ENDPOINTS.post.REGISTER, {
         method: "POST",
         credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(userData),
       });
 
@@ -95,7 +102,7 @@ const useAuth = () => {
         throw new Error(json.message || "Registration failed");
       }
 
-      if (json.data && json.data.userId) {
+      if (json.data?.userId) {
         const { userId, email, username } = json.data;
         setUser({ userId, email, username });
         setIsAuthenticated(true);
@@ -112,49 +119,6 @@ const useAuth = () => {
     }
   }, []);
 
-  // 🚪 Logout
-  const logout = useCallback(async () => {
-    try {
-      await fetch(ENDPOINTS.post.LOGOUT, {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-    } catch {
-      error;
-    }
-
-    setUser(null);
-    setError(null);
-    setIsAuthenticated(false);
-  }, []);
-
-  // 🌐 API fetch wrapper with auto-logout on expired cookie
-  const authenticatedFetch = useCallback(async (url, options = {}) => {
-    const res = await fetch(url, {
-      ...options,
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        ...(options.headers || {}),
-      },
-    });
-
-    if (res.status === 401) {
-      // token expired or invalid
-      setUser(null);
-      setIsAuthenticated(false);
-    }
-
-    return res;
-  }, []);
-
-  const getCurrentUser = useCallback(() => user, [user]);
-  const updateUser = useCallback((u) => setUser(u), []);
-  const clearError = useCallback(() => setError(null), []);
-
   return {
     user,
     loading,
@@ -162,11 +126,9 @@ const useAuth = () => {
     isAuthenticated,
     login,
     register,
-    logout,
-    authenticatedFetch,
-    getCurrentUser,
-    updateUser,
-    clearError,
+    getCurrentUser: () => user,
+    updateUser: (u) => setUser(u),
+    clearError: () => setError(null),
   };
 };
 
