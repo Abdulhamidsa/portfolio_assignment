@@ -1,20 +1,28 @@
-import React, { createContext, useContext } from "react";
-import useAuth from "../hooks/useAuth";
+import { createContext, useContext, useState } from "react";
 
 const AuthContext = createContext();
 
-export const useAuthContext = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuthContext must be used within an AuthProvider");
-  }
-  return context;
-};
+export function AuthProvider({ children }) {
+  const [user, setUser] = useState(null);
+  const [token, setToken] = useState(null);
 
-export const AuthProvider = ({ children }) => {
-  const auth = useAuth();
+  const login = (userData, tokenData) => {
+    setUser(userData);
+    setToken(tokenData);
+    localStorage.setItem("token", tokenData); // optional persistence
+  };
 
-  return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>;
-};
+  const logout = () => {
+    setUser(null);
+    setToken(null);
+    localStorage.removeItem("token");
+  };
 
-export default AuthProvider;
+  return (
+    <AuthContext.Provider value={{ user, token, login, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
+}
+
+export const useAuth = () => useContext(AuthContext);
