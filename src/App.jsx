@@ -9,6 +9,9 @@ import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import { AuthProvider } from "./context/AuthContext.jsx";
 
 function App() {
+  const { movies } = useGetMovies();
+  console.log(movies);
+
   return (
     <AuthProvider>
       <Router>
