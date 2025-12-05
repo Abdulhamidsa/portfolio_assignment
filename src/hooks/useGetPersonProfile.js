@@ -22,7 +22,7 @@ const useGetPersonProfile = (nconst) => {
         }
 
         const data = await response.json();
-        setPerson(data.data); // because your API returns {success, message, data}
+        setPerson(data); // because your API returns {success, message, data}
       } catch (err) {
         setError(err.message);
       } finally {

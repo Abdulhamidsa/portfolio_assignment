@@ -2,8 +2,10 @@ import { useParams } from "react-router-dom";
 import useGetPersonProfile from "../hooks/useGetPersonProfile";
 
 export default function PersonProfile() {
-  const { nconst } = useParams();
+    //const { nconst } = useParams();
+    const nconst = "nm0424060"; // Example nconst for testing
   const { person, loading, error } = useGetPersonProfile(nconst);
+  console.log("Person Data:", person);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p style={{ color: "red" }}>{error}</p>;
