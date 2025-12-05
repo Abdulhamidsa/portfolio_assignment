@@ -7,6 +7,7 @@ import Profile from "./components/Profile.jsx";
 import AppNavbar from "./components/AppNavbar.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import { AuthProvider } from "./context/AuthContext.jsx";
+import PersonProfile from "./pages/PersonProfile";
 
 function App() {
   return (
@@ -16,6 +17,8 @@ function App() {
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/signout" element={<SignOut />} />
+         <Route path="/people" element={<PersonProfile />} />
+      
         <Route
           path="/profile"
           element={
