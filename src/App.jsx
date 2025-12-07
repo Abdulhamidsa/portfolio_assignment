@@ -2,8 +2,9 @@ import "./App.css";
 import AuthProvider from "./context/AuthContext";
 import useGetMovies from "./hooks/useGetMovies";
 import { Routes, Route } from "react-router-dom";
-import Home from "./pages/home";
+import Home from "./pages/Home";
 import About from "./pages/about";
+import AuthExample from "./components/AuthExample";
 
 function App() {
   const { movies } = useGetMovies();
@@ -14,6 +15,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
+        <Route path="/auth" element={<AuthExample />} /> {/* NEW */}
       </Routes>
     </AuthProvider>
   );
