@@ -1,37 +1,63 @@
-import { useState, useEffect, useCallback } from "react";
-import Cookies from "js-cookie";
+import { useState, useCallback, useContext, createContext, useEffect } from "react";
 import { ENDPOINTS } from "../util/endpoints";
 
-const TOKEN_COOKIE_NAME = "auth_token";
-const USER_COOKIE_NAME = "auth_user";
-const COOKIE_EXPIRES_DAYS = 7; // Token expires in 7 days
+export const AuthContext = createContext();
+
+export const useAuthContext = () => {
+  const ctx = useContext(AuthContext);
+  if (!ctx) {
+    throw new Error("useAuthContext must be used inside <AuthProvider>");
+  }
+  return ctx;
+};
 
 const useAuth = () => {
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  // Initialize auth state from cookies
+  // This is SAFE because we never store sensitive data in localStorage/sessionStorage
+  // The backend validates the httpOnly cookie which JS cannot access
   useEffect(() => {
-    const storedToken = Cookies.get(TOKEN_COOKIE_NAME);
-    const storedUser = Cookies.get(USER_COOKIE_NAME);
-
-    if (storedToken && storedUser) {
+    const checkSession = async () => {
       try {
-        setToken(storedToken);
-        setUser(JSON.parse(storedUser));
-      } catch (err) {
-        console.error("Error parsing stored user data:", err);
-        // Clear invalid cookies
-        Cookies.remove(TOKEN_COOKIE_NAME);
-        Cookies.remove(USER_COOKIE_NAME);
-      }
-    }
-    setLoading(false);
-  }, []);
+        setLoading(true);
+        const res = await fetch(ENDPOINTS.get.GET_CURRENT_USER, {
+          method: "GET",
+          credentials: "include",
+        });
 
-  // Login function
+        if (!res.ok) {
+          setIsAuthenticated(false);
+          setUser(null);
+          return;
+        }
+
+        const json = await res.json();
+        console.log("Session check - Current user:", json);
+
+        if (json.success && json.data) {
+          setUser(json.data);
+          setIsAuthenticated(true);
+          console.log("Session valid - User is authenticated");
+        } else {
+          setIsAuthenticated(false);
+          setUser(null);
+        }
+      } catch (err) {
+        setIsAuthenticated(false);
+        setUser(null);
+        console.error("Session check failed:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    checkSession();
+  }, []); // Run once on mount
+
+  // LOGIN
   const login = useCallback(async (emailOrUsername, password) => {
     try {
       setLoading(true);
@@ -39,40 +65,34 @@ const useAuth = () => {
 
       const response = await fetch(ENDPOINTS.post.LOGIN, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({ emailOrUsername, password }),
       });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Login failed");
+      const json = await response.json();
+
+      if (!response.ok || !json.success) {
+        throw new Error(json.message || "Login failed");
       }
 
-      const data = await response.json();
+      const { userId, email, username } = json.data;
 
-      // Assuming the API returns { token, user } or similar structure
-      const { token: authToken, user: userData } = data;
+      setUser({ userId, email, username });
+      setIsAuthenticated(true);
 
-      // Store token and user data in cookies
-      Cookies.set(TOKEN_COOKIE_NAME, authToken, { expires: COOKIE_EXPIRES_DAYS });
-      Cookies.set(USER_COOKIE_NAME, JSON.stringify(userData), { expires: COOKIE_EXPIRES_DAYS });
-
-      // Update state
-      setToken(authToken);
-      setUser(userData);
-
-      return { success: true, data };
+      return { success: true };
     } catch (err) {
       setError(err.message);
+      setIsAuthenticated(false);
+      setUser(null);
       return { success: false, error: err.message };
     } finally {
       setLoading(false);
     }
   }, []);
 
-  // Register function
+  // REGISTER
   const register = useCallback(async (userData) => {
     try {
       setLoading(true);
@@ -80,110 +100,84 @@ const useAuth = () => {
 
       const response = await fetch(ENDPOINTS.post.REGISTER, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(userData),
       });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Registration failed");
+      const json = await response.json();
+
+      if (!response.ok || !json.success) {
+        throw new Error(json.message || "Registration failed");
       }
 
-      const data = await response.json();
-
-      // Assuming the API returns { token, user } after registration
-      // If not, you might need to automatically login after registration
-      const { token: authToken, user: newUser } = data;
-
-      if (authToken && newUser) {
-        // Store token and user data in cookies
-        Cookies.set(TOKEN_COOKIE_NAME, authToken, { expires: COOKIE_EXPIRES_DAYS });
-        Cookies.set(USER_COOKIE_NAME, JSON.stringify(newUser), { expires: COOKIE_EXPIRES_DAYS });
-
-        // Update state
-        setToken(authToken);
-        setUser(newUser);
+      if (json.data?.userId) {
+        const { userId, email, username } = json.data;
+        setUser({ userId, email, username });
+        setIsAuthenticated(true);
       }
 
-      return { success: true, data };
+      return { success: true };
     } catch (err) {
       setError(err.message);
+      setIsAuthenticated(false);
+      setUser(null);
       return { success: false, error: err.message };
     } finally {
       setLoading(false);
     }
   }, []);
 
-  // Logout function
-  const logout = useCallback(() => {
-    // Remove cookies
-    Cookies.remove(TOKEN_COOKIE_NAME);
-    Cookies.remove(USER_COOKIE_NAME);
+  // LOGOUT
+  const logout = useCallback(async () => {
+    try {
+      await fetch(ENDPOINTS.post.LOGOUT, {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+      });
+    } catch (err) {
+      console.warn("Logout request failed:", err.message);
+    }
 
-    // Clear state
-    setToken(null);
+    // Clear local auth state
     setUser(null);
     setError(null);
+    setIsAuthenticated(false);
   }, []);
 
-  // Function to make authenticated API calls
-  const authenticatedFetch = useCallback(
-    async (url, options = {}) => {
-      if (!token) {
-        throw new Error("No authentication token available");
-      }
-
-      const authHeaders = {
-        ...options.headers,
-        Authorization: `Bearer ${token}`,
+  // AUTHENTICATED FETCH - wrapper for API calls with credentials
+  const authenticatedFetch = useCallback(async (url, options = {}) => {
+    const res = await fetch(url, {
+      ...options,
+      credentials: "include",
+      headers: {
         "Content-Type": "application/json",
-      };
+        ...(options.headers || {}),
+      },
+    });
 
-      return fetch(url, {
-        ...options,
-        headers: authHeaders,
-      });
-    },
-    [token]
-  );
+    // Auto-logout on 401 (unauthorized)
+    if (res.status === 401) {
+      setUser(null);
+      setIsAuthenticated(false);
+    }
 
-  // Check if user is authenticated
-  const isAuthenticated = Boolean(token && user);
-
-  // Get current user info
-  const getCurrentUser = useCallback(() => {
-    return user;
-  }, [user]);
-
-  // Update user data (useful for profile updates)
-  const updateUser = useCallback((updatedUser) => {
-    setUser(updatedUser);
-    Cookies.set(USER_COOKIE_NAME, JSON.stringify(updatedUser), { expires: COOKIE_EXPIRES_DAYS });
-  }, []);
-
-  // Clear error
-  const clearError = useCallback(() => {
-    setError(null);
+    return res;
   }, []);
 
   return {
-    // State
     user,
-    token,
     loading,
     error,
     isAuthenticated,
-
-    // Actions
     login,
     register,
     logout,
-    getCurrentUser,
-    updateUser,
-    clearError,
     authenticatedFetch,
+    getCurrentUser: () => user,
+    updateUser: (u) => setUser(u),
+    clearError: () => setError(null),
   };
 };
 
