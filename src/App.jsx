@@ -1,16 +1,17 @@
 import "./App.css";
 import AuthProvider from "./context/AuthProvider";
 import { Routes, Route } from "react-router-dom";
-import Home from "./pages/Home";
 import About from "./pages/About";
-import Profile from "./pages/profile";
+import Home from "./pages/Home";
+
+import Auth from "./pages/Auth";
 import ProtectedRoute from "./components/ProtectedRoutes";
 
-function App() {
+const App = () => {
   return (
     <AuthProvider>
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Auth />} />
         <Route
           path="/about"
           element={
@@ -19,17 +20,18 @@ function App() {
             </ProtectedRoute>
           }
         />
+
         <Route
-          path="/profile"
+          path="/home"
           element={
             <ProtectedRoute>
-              <Profile />
+              <Home />
             </ProtectedRoute>
           }
         />
       </Routes>
     </AuthProvider>
   );
-}
+};
 
 export default App;
