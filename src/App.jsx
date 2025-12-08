@@ -1,8 +1,14 @@
 import "./App.css";
 import AuthProvider from "./context/AuthProvider";
 import { Routes, Route } from "react-router-dom";
-import About from "./pages/About";
-import Home from "./pages/Home";
+import SignIn from "./components/SignIn.jsx";
+import SignUp from "./components/SignUp.jsx";
+import SignOut from "./components/SignOut.jsx";
+import Profile from "./components/Profile.jsx";
+import AppNavbar from "./components/AppNavbar.jsx";
+import ProtectedRoute from "./components/ProtectedRoute.jsx";
+import { AuthProvider } from "./context/AuthContext.jsx";
+import PersonProfile from "./pages/PersonProfile";
 
 import Auth from "./pages/Auth";
 import ProtectedRoute from "./components/ProtectedRoutes";
@@ -12,7 +18,11 @@ const App = () => {
     <AuthProvider>
       <AppNavbar />
       <Routes>
-        <Route path="/" element={<Auth />} />
+        <Route path="/signin" element={<SignIn />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/signout" element={<SignOut />} />
+        <Route path="/people" element={<PersonProfile />} />
+
         <Route
           path="/about"
           element={

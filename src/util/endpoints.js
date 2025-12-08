@@ -13,7 +13,6 @@ export const ENDPOINTS = {
     GET_TITLE_BY_ID: (id) => `${API_BASE_URL}/Titles/${id}`,
     SEARCH_TITLES: (query) => `${API_BASE_URL}/Titles/search?query=${encodeURIComponent(query)}`,
     GET_POPULAR_PEOPLE: `${API_BASE_URL}/People/popular`,
-    GET_BOOKMARKS: `${API_BASE_URL}/Bookmarks`,
-    GET_CURRENT_USER: `${API_BASE_URL}/Auth/me`,
+    GET_PERSON_BY_ID: (nconst) => `${API_BASE_URL}/People/${nconst}`,
   },
 };
