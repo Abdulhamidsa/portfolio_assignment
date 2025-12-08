@@ -1,9 +1,11 @@
-import Bookmarks from "../components/Bookmarks";
+import Book from "../components/Book";
+
 
 function Home() {
   return (
     <div>
-      <Bookmarks />
+      
+      <Book />
     </div>
   );
 }
