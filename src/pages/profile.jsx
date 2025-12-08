@@ -1,5 +1,3 @@
-function Profile() {
-  return <div className="container mt-5">Profile</div>;
-}
-
-export default Profile;
+export const profile = () => {
+  return <div>profile</div>;
+};
