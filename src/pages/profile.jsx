@@ -1,5 +1,3 @@
-function Product() {
-  return <div>Product</div>;
-}
-
-export default Product;
+export const profile = () => {
+  return <div>profile</div>;
+};
