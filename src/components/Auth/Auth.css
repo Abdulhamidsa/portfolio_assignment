@@ -1,71 +1,51 @@
-/* Dark theme styles for AuthExample component */
-
-.form-control-dark:focus {
-  background-color: rgba(50, 50, 50, 0.9) !important;
-  border-color: #667eea !important;
-  box-shadow: 0 0 0 0.25rem rgba(102, 126, 234, 0.25) !important;
-  color: #fff !important;
+/* Root navbar */
+.app-navbar {
+  background: rgba(15, 15, 15, 0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  transition: all 0.3s ease;
+  z-index: 1000;
 }
 
-.form-control-dark::placeholder {
-  color: rgba(255, 255, 255, 0.6) !important;
+/* Brand */
+.brand {
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: #e7e7e7 !important;
+  transition: color 0.3s ease;
 }
 
-.form-control-dark:hover {
-  border-color: #555 !important;
-  background-color: rgba(45, 45, 45, 0.9) !important;
+.brand:hover {
+  color: #19c37d !important; /* ChatGPT green */
 }
 
-/* Button hover effects */
-.btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.3) !important;
+/* Nav links */
+.nav-link-custom {
+  font-size: 0.95rem;
+  color: #d1d1d1 !important;
+  padding: 8px 14px;
+  border-radius: 6px;
+  transition: all 0.25s ease;
 }
 
-.btn:active {
-  transform: translateY(0px);
+.nav-link-custom:hover {
+  color: #19c37d !important;
+  background: rgba(25, 195, 125, 0.08);
 }
 
-/* Animation for the background pattern */
-@keyframes float {
-  0%,
-  100% {
-    transform: translateY(0px) rotate(0deg);
+/* Mobile toggle */
+.navbar-toggle {
+  border: none;
+}
+
+.navbar-toggle:focus {
+  box-shadow: none;
+}
+
+/* Mobile view spacing */
+@media (max-width: 991px) {
+  .nav-link-custom {
+    margin-top: 8px;
   }
-  50% {
-    transform: translateY(-10px) rotate(1deg);
-  }
-}
-
-/* Card animation */
-@keyframes slideInUp {
-  from {
-    opacity: 0;
-    transform: translate3d(0, 100%, 0);
-  }
-  to {
-    opacity: 1;
-    transform: translate3d(0, 0, 0);
-  }
-}
-
-.card {
-  animation: slideInUp 0.8s ease-out;
-}
-
-/* Loading spinner enhancement */
-.spinner-border {
-  filter: drop-shadow(0 0 10px rgba(102, 126, 234, 0.5));
-}
-
-/* Alert styling */
-.alert-danger {
-  background: rgba(220, 53, 69, 0.2) !important;
-  border: 1px solid rgba(220, 53, 69, 0.5) !important;
-  color: #ff6b6b !important;
-}
-
-/* Success elements */
-.bg-success {
-  background: linear-gradient(135deg, #28a745, #20c997) !important;
 }

@@ -1,4 +1,4 @@
-import AuthExample from "../components/Auth/SignIn";
+import AuthExample from "../components/Auth/Signups";
 import { useAuthContext } from "../hooks/useAuth";
 import Home from "./Home";
 
