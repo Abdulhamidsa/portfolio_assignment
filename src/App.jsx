@@ -18,11 +18,7 @@ const App = () => {
     <AuthProvider>
       <AppNavbar />
       <Routes>
-        <Route path="/signin" element={<SignIn />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/signout" element={<SignOut />} />
-        <Route path="/people" element={<PersonProfile />} />
-
+        <Route path="/" element={<Auth />} />
         <Route
           path="/about"
           element={
