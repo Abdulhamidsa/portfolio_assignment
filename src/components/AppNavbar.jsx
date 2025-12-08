@@ -11,6 +11,7 @@ function AppNavbar() {
         <Navbar.Brand as={Link} to="/">MovieApp</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
+          <SearchMovie inline />
           <Nav className="ms-auto">
             {!user ? (
               <>

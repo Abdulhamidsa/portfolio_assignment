@@ -8,11 +8,14 @@ import AppNavbar from "./components/AppNavbar.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import { AuthProvider } from "./context/AuthContext.jsx";
 import PersonProfile from "./pages/PersonProfile";
+import SearchMovie from "./components/SearchMovie";
+
 
 function App() {
   return (
     <AuthProvider>
       <AppNavbar />
+      <SearchMovie />
       <Routes>
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
