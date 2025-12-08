@@ -1,0 +1,85 @@
+/* Root hero */
+.hero {
+  position: relative;
+  min-height: 70dvh;
+  max-height: 80dvh;
+  overflow: hidden;
+  color: #fff;
+}
+/* Background layer */
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  filter: brightness(0.8);
+  animation: fadeIn 1.2s ease-in-out;
+}
+
+/* Dark gradient overlay */
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgb(0, 0, 0), rgba(0, 0, 0, 0.081));
+  border: 3px solid #ffffff93;
+  border-radius: 5px;
+}
+
+/* Bottom content bar */
+.hero-content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 2rem 0;
+  z-index: 2;
+  animation: fadeIn 0.9s ease-in-out;
+}
+
+/* Text styling */
+.hero-genre {
+  color: #ffcc00;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+}
+
+.hero-title {
+  margin-top: 0.5rem;
+  font-weight: 700;
+  font-size: clamp(2rem, 4vw, 3.5rem);
+}
+
+.hero-meta {
+  opacity: 0.75;
+  margin-top: 0.3rem;
+}
+
+/* Actions */
+.hero-actions {
+  margin-top: 2rem;
+  display: flex;
+  gap: 1rem;
+}
+
+/* Loader */
+.hero-loader {
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+  color: #fff;
+}
+
+/* Fade animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

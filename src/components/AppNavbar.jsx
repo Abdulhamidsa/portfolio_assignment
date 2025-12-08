@@ -1,26 +1,43 @@
 import { Navbar, Nav, Container } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useAuthContext } from "../hooks/useAuth";
 
-function AppNavbar() {
-  const { user } = useAuth();
+const AppNavbar = () => {
+  const { isAuthenticated } = useAuthContext();
 
   return (
-    <Navbar bg="dark" variant="dark" expand="lg">
+    <Navbar expand="lg" className="app-navbar position-fixed w-100 top-0 z-3">
       <Container>
-        <Navbar.Brand as={Link} to="/">MovieApp</Navbar.Brand>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="ms-auto">
-            {!user ? (
+        <Navbar.Brand as={Link} to="/" className="brand">
+          MovieApp
+        </Navbar.Brand>
+
+        {isAuthenticated && <Navbar.Toggle className="d-lg-none" />}
+
+        <Navbar.Collapse>
+          <Nav className="ms-auto gap-3">
+            {!isAuthenticated && (
               <>
-                <Nav.Link as={Link} to="/signin">Sign In</Nav.Link>
-                <Nav.Link as={Link} to="/signup">Sign Up</Nav.Link>
+                <Nav.Link as={Link} to="/signin" className="nav-link-custom">
+                  Sign In
+                </Nav.Link>
+                <Nav.Link as={Link} to="/signup" className="nav-link-custom">
+                  Sign Up
+                </Nav.Link>
               </>
-            ) : (
+            )}
+
+            {isAuthenticated && (
               <>
-                <Nav.Link as={Link} to="/profile">Profile</Nav.Link>
-                <Nav.Link as={Link} to="/signout">Sign Out</Nav.Link>
+                <Nav.Link as={Link} to="/" className="nav-link-custom">
+                  Home
+                </Nav.Link>
+                <Nav.Link as={Link} to="/movies" className="nav-link-custom">
+                  Movies
+                </Nav.Link>
+                <Nav.Link as={Link} to="/profile" className="nav-link-custom">
+                  Profile
+                </Nav.Link>
               </>
             )}
           </Nav>
@@ -28,6 +45,6 @@ function AppNavbar() {
       </Container>
     </Navbar>
   );
-}
+};
 
 export default AppNavbar;
