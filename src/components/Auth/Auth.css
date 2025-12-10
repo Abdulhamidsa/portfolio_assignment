@@ -1,51 +1,92 @@
-/* Root navbar */
-.app-navbar {
-  background: rgba(15, 15, 15, 0.85);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-  transition: all 0.3s ease;
-  z-index: 1000;
+/* Background */
+.auth-bg {
+  min-height: 100vh;
+  background-color: var(--bg-main);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* Brand */
-.brand {
-  font-size: 1.1rem;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  color: #e7e7e7 !important;
-  transition: color 0.3s ease;
+/* Card */
+.auth-card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-soft);
+  border-radius: 16px;
+  box-shadow: var(--shadow-soft);
+  min-width: 160px;
+  max-width: 520px;
+  width: 100%;
+  overflow: hidden;
 }
 
-.brand:hover {
-  color: #19c37d !important; /* ChatGPT green */
+/* Header */
+.auth-card .card-header {
+  background-color: transparent;
+  border-bottom: 1px solid var(--border-soft);
 }
 
-/* Nav links */
-.nav-link-custom {
-  font-size: 0.95rem;
-  color: #d1d1d1 !important;
-  padding: 8px 14px;
-  border-radius: 6px;
-  transition: all 0.25s ease;
+.auth-card h4 {
+  color: var(--text-primary);
+  font-weight: 700;
+  letter-spacing: 0.4px;
 }
 
-.nav-link-custom:hover {
-  color: #19c37d !important;
-  background: rgba(25, 195, 125, 0.08);
+/* Labels */
+.form-label {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
 }
 
-/* Mobile toggle */
-.navbar-toggle {
+/* Inputs */
+.form-control-dark {
+  background-color: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-soft);
+  color: var(--text-primary);
+  padding: 0.75rem 0.85rem;
+  border-radius: 10px;
+}
+
+.form-control-dark::placeholder {
+  color: var(--text-muted);
+}
+
+.form-control-dark:focus {
+  background-color: rgba(255, 255, 255, 0.03);
+  color: var(--text-primary);
+  border-color: var(--accent-gold);
+  box-shadow: 0 0 0 0.15rem rgba(178, 74, 74, 0.25);
+}
+
+/* Button */
+.auth-card .btn {
+  background-color: var(--accent-gold);
   border: none;
+  color: var(--text-primary);
+  font-weight: 600;
+  border-radius: 12px;
+  padding: 0.8rem;
+  transition: transform 150ms ease, opacity 150ms ease;
 }
 
-.navbar-toggle:focus {
-  box-shadow: none;
+.auth-card .btn:hover {
+  transform: translateY(-1px);
+  opacity: 0.92;
 }
 
-/* Mobile view spacing */
-@media (max-width: 991px) {
-  .nav-link-custom {
-    margin-top: 8px;
-  }
+.auth-card .btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Alert */
+.alert-danger {
+  background-color: rgba(178, 74, 74, 0.12);
+  border: 1px solid rgba(178, 74, 74, 0.35);
+  color: #f1c3c3;
+  border-radius: 12px;
+}
+
+/* Spinner */
+.spinner-border {
+  color: #0b0708;
 }

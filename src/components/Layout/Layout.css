@@ -1,0 +1,140 @@
+.app-navbar {
+  background-color: var(--bg-surface);
+  border-bottom: 1px solid var(--border-soft);
+}
+
+/* Brand */
+.app-navbar .brand {
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  color: var(--text-primary);
+}
+
+.app-navbar .brand:hover {
+  color: var(--text-primary);
+}
+
+/* Remove default Bootstrap focus junk */
+.app-navbar .navbar-toggler {
+  border: none;
+}
+
+.app-navbar .navbar-toggler:focus {
+  box-shadow: none;
+}
+
+/* Nav links */
+.navbar-nav .nav-link {
+  width: fit-content;
+  display: inline-flex;
+}
+.nav-link-custom {
+  position: relative;
+  color: var(--text-secondary) !important;
+  font-weight: 500;
+  padding: 0.25rem 0;
+  display: inline-block;
+
+  transition: color 160ms ease;
+}
+
+/* Hover = brighter text */
+.nav-link-custom:hover {
+  color: var(--text-primary) !important;
+}
+
+/* Accent underline  */
+.nav-link-custom::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 0;
+  height: 2px;
+  background-color: var(--accent-gold);
+  transition: width 0.2s ease;
+}
+
+.nav-link-custom:hover::after {
+  width: 100%;
+}
+
+/* Active  */
+.nav-link-custom.active {
+  color: var(--text-primary) !important;
+}
+
+.nav-link-custom.active::after {
+  width: 100%;
+}
+
+/* Mobile menu */
+@media (max-width: 991px) {
+  .app-navbar .navbar-collapse {
+    background-color: var(--bg-surface);
+    border-top: 1px solid var(--border-soft);
+    padding: 1rem 0;
+  }
+
+  .nav-link-custom {
+    padding: 0.5rem 0;
+  }
+
+  .nav-link-custom::after {
+    bottom: 0;
+  }
+}
+
+.nav-welcome {
+  display: flex;
+  align-items: center;
+
+  font-size: 0.8rem;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+
+  color: var(--text-muted);
+
+  padding: 0.35rem 0.7rem;
+  border-radius: 10px;
+
+  background-color: rgba(255, 255, 255, 0.03);
+
+  margin-left: 0.75rem;
+
+  transform: translateY(-1px);
+  opacity: 0.9;
+}
+
+.nav-welcome span {
+  color: var(--text-primary);
+  font-weight: 600;
+  margin-left: 0.3rem;
+}
+
+.session-loader {
+  background-color: var(--bg-main);
+  color: var(--text-primary);
+  text-align: center;
+}
+
+/* Spinner accent */
+.session-loader .spinner-border {
+  color: var(--accent-gold);
+  width: 2.4rem;
+  height: 2.4rem;
+}
+
+/* Title */
+.session-loader h5 {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  letter-spacing: 0.4px;
+}
+
+/* Subtitle */
+.session-loader p {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin: 0;
+}
