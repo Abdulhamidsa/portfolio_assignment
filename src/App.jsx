@@ -7,6 +7,7 @@ import Auth from "./pages/Auth";
 import ProtectedRoute from "./components/ProtectedRoutes";
 import Signin from "./components/Auth/SignIn";
 import AppLayout from "./components/Layout/AppLayout";
+import Search from "./pages/Search";   // <<----- ADD THIS
 
 const App = () => {
   return (
@@ -15,6 +16,17 @@ const App = () => {
         <Route element={<AppLayout />}>
           <Route path="/" element={<Auth />} />
           <Route path="/signin" element={<Signin />} />
+
+          {/* NEW SEARCH ROUTE */}
+          <Route
+            path="/search"
+            element={
+              <ProtectedRoute>
+                <Search />
+              </ProtectedRoute>
+            }
+          />
+
           <Route
             path="/home"
             element={
@@ -23,6 +35,14 @@ const App = () => {
               </ProtectedRoute>
             }
           />
+          <Route
+  path="/search"
+  element={
+    <ProtectedRoute>
+      <Search />
+    </ProtectedRoute>
+  }
+/>
         </Route>
       </Routes>
     </AuthProvider>
