@@ -2,22 +2,20 @@ import { Navigate } from "react-router-dom";
 import { useAuthContext } from "../hooks/useAuth";
 
 export default function ProtectedRoute({ children }) {
-  const { loading, isAuthenticated } = useAuthContext();
+  const { authReady, isAuthenticated } = useAuthContext();
 
-  if (loading) {
+  if (!authReady) {
     return (
-      <div className="d-flex flex-column justify-content-center align-items-center min-vh-100 bg-dark text-light">
-        <div className="spinner-border text-primary mb-3" role="status">
-          <span className="visually-hidden">Loading...</span>
-        </div>
-        <h5>Verifying Authentication...</h5>
-        <p className="text-muted">Please wait while we check your login status</p>
+      <div className="d-flex flex-column justify-content-center align-items-center min-vh-100">
+        <div className="spinner-border mb-3" role="status" />
+        <h5>Verifying authentication…</h5>
+        <p className="text-muted">Please wait</p>
       </div>
     );
   }
 
   if (!isAuthenticated) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/signin" replace />;
   }
 
   return children;

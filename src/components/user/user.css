@@ -1,0 +1,66 @@
+/* Main card */
+.bookmark-card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-soft);
+  box-shadow: var(--shadow-soft);
+  color: var(--text-primary);
+}
+
+/* Header */
+.bookmark-header {
+  border-bottom: 1px solid var(--border-soft);
+  background: transparent;
+}
+
+/* Loading */
+.bookmark-loading {
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.bookmark-loading .spinner-border {
+  color: var(--accent-gold);
+}
+
+/* Empty state */
+.bookmark-empty {
+  color: var(--text-muted);
+  text-align: center;
+  margin: 2rem 0;
+}
+
+/* Alert */
+.bookmark-alert {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-soft);
+  color: var(--text-secondary);
+}
+
+.bookmark-alert-error {
+  border-color: rgba(180, 60, 60, 0.4);
+}
+
+/* Individual bookmark */
+.bookmark-item {
+  background-color: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-soft);
+}
+
+.bookmark-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+/* Action button */
+.bookmark-btn {
+  background: transparent;
+  border: 1px solid var(--border-soft);
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+}
+
+.bookmark-btn:hover {
+  color: var(--text-primary);
+  border-color: var(--accent-gold);
+}

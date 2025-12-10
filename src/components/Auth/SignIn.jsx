@@ -2,23 +2,17 @@ import { useState, useEffect } from "react";
 import { Container, Row, Col, Card, Form, Button, Alert, Spinner } from "react-bootstrap";
 import { useAuthContext } from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
+
 import "./Auth.css";
 
 const Signin = () => {
-  const { login, loading, error, isAuthenticated, clearError } = useAuthContext();
-
+  const { login, loading, error, clearError, isAuthenticated } = useAuthContext();
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     emailOrUsername: "a@a.com",
     password: "Aboood166",
   });
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      navigate("/home", { replace: true });
-    }
-  }, [isAuthenticated, navigate]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -35,11 +29,16 @@ const Signin = () => {
     await login(formData.emailOrUsername, formData.password);
   };
 
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/home", { replace: true });
+    }
+  }, [isAuthenticated, navigate]);
   return (
     <div className="auth-bg">
       <Container className="d-flex align-items-center justify-content-center min-vh-100">
         <Row className="w-100 justify-content-center">
-          <Col md={6} lg={5}>
+          <Col md={9} lg={8}>
             <Card className="auth-card shadow-lg">
               <Card.Header className="text-center py-4">
                 <h4 className="text-light mb-0">Sign In</h4>
