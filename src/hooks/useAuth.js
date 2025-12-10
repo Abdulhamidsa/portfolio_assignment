@@ -16,6 +16,7 @@ const useAuth = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [authReady, setAuthReady] = useState(false);
 
   // This is SAFE because we never store sensitive data in localStorage/sessionStorage
   // The backend validates the httpOnly cookie which JS cannot access
@@ -23,6 +24,7 @@ const useAuth = () => {
     const checkSession = async () => {
       try {
         setLoading(true);
+
         const res = await fetch(ENDPOINTS.get.GET_CURRENT_USER, {
           method: "GET",
           credentials: "include",
@@ -51,11 +53,12 @@ const useAuth = () => {
         console.error("Session check failed:", err);
       } finally {
         setLoading(false);
+        setAuthReady(true);
       }
     };
 
     checkSession();
-  }, []); // Run once on mount
+  }, []);
 
   // LOGIN
   const login = useCallback(async (emailOrUsername, password) => {
@@ -157,7 +160,7 @@ const useAuth = () => {
       },
     });
 
-    // Auto-logout on 401 (unauthorized)
+    // Auto-logout on 401
     if (res.status === 401) {
       setUser(null);
       setIsAuthenticated(false);
@@ -171,6 +174,7 @@ const useAuth = () => {
     loading,
     error,
     isAuthenticated,
+    authReady,
     login,
     register,
     logout,

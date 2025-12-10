@@ -2,19 +2,12 @@ import { useState, useCallback, useEffect } from "react";
 import { useAuthContext } from "./useAuth";
 import { ENDPOINTS } from "../util/endpoints";
 
-/**
- * 🔖 BOOKMARKS HOOK - For Authorized Bookmark Operations
- *
- * This hook uses authenticatedFetch to interact with protected bookmark endpoints.
- * All requests automatically include httpOnly cookies for authentication.
- */
 const useBookmarks = () => {
   const { authenticatedFetch, isAuthenticated } = useAuthContext();
   const [bookmarks, setBookmarks] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Fetch user's bookmarks (protected endpoint)
   const fetchBookmarks = useCallback(async () => {
     if (!isAuthenticated) {
       setBookmarks([]);
@@ -47,7 +40,6 @@ const useBookmarks = () => {
     }
   }, [authenticatedFetch, isAuthenticated]);
 
-  // Toggle bookmark for a title (protected endpoint)
   const toggleBookmark = useCallback(
     async (tconst) => {
       if (!isAuthenticated) {
@@ -68,9 +60,8 @@ const useBookmarks = () => {
         const json = await response.json();
 
         if (json.success) {
-          // Refresh bookmarks after toggle
           await fetchBookmarks();
-          return json.data; // { Bookmarked: true/false }
+          return json.data;
         } else {
           throw new Error(json.message || "Failed to toggle bookmark");
         }
@@ -83,7 +74,6 @@ const useBookmarks = () => {
     [authenticatedFetch, isAuthenticated, fetchBookmarks]
   );
 
-  // Check if a specific title is bookmarked
   const isBookmarked = useCallback(
     (tconst) => {
       return bookmarks.some((bookmark) => bookmark.tconst === tconst);
@@ -91,7 +81,6 @@ const useBookmarks = () => {
     [bookmarks]
   );
 
-  // Auto-fetch bookmarks when user logs in
   useEffect(() => {
     if (isAuthenticated) {
       fetchBookmarks();
