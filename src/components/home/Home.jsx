@@ -3,6 +3,7 @@ import { Container } from "react-bootstrap";
 import "./home.css";
 import useBookmarks from "../../hooks/useBookmarks";
 import { useAuthContext } from "../../hooks/useAuth";
+import People from "../People/People";
 
 const INTERVAL = 9000;
 
@@ -114,6 +115,11 @@ const Home = () => {
             </div>
           </Container>
         </div>
+      </section>
+
+      {/* ============  NEW SECTION: POPULAR ACTORS ============ */}
+      <section className="mt-5">
+        <People />
       </section>
 
       {/* MOVIE LIST */}
