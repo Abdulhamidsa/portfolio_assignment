@@ -1,0 +1,92 @@
+/* Page container */
+.person-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  height: calc(100vh - 80px);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+/* Back button */
+.back-btn {
+  background: none;
+  border: none;
+  color: #f5c518;
+  font-size: 16px;
+  cursor: pointer;
+  margin-bottom: 15px;
+  align-self: flex-start;
+}
+/* Header (photo + basic info) */
+.person-header {
+  display: flex;
+  gap: 32px;
+  align-items: flex-start;
+  margin-bottom: 25px;
+}
+/* Fixed photo */
+.person-photo {
+  width: 260px;
+  height: 360px;
+  object-fit: cover;
+  border-radius: 12px;
+  flex-shrink: 0;
+}
+/* Info next to photo */
+.person-info {
+  flex: 1;
+}
+.person-info h1 {
+  font-size: 36px;
+  margin-bottom: 8px;
+}
+.professions {
+  color: #aaa;
+  margin-bottom: 8px;
+}
+.meta {
+  margin-bottom: 8px;
+}
+.rating {
+  font-size: 20px;
+  margin-bottom: 8px;
+}
+.votes {
+  color: #aaa;
+  font-size: 14px;
+}
+/* Known for */
+.known-for {
+  margin-top: 10px;
+}
+/* Bottom split section */
+.details-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  flex: 1;
+  overflow: hidden;
+}
+/* Scrollable content boxes */
+.details-box {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 20px;
+  border-radius: 12px;
+  overflow-y: auto;
+}
+/* Text styling */
+.details-box h2 {
+  margin-bottom: 10px;
+}
+.details-box p {
+  line-height: 1.6;
+  color: #ddd;
+}
+/* Optional scrollbar styling */
+.details-box::-webkit-scrollbar {
+  width: 6px;
+}
+.details-box::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+}
