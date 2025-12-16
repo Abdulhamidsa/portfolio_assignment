@@ -1,4 +1,3 @@
-
 import { useRef, useState, useEffect } from "react";
 import useGetPeople from "../../hooks/useGetPeople";
 import "./people.css";
@@ -40,4 +39,44 @@ const People = () => {
       scrollToPage(newPage);
     }
   };
-   return null;
+  return (
+    <>
+      {/* SECTION LABELS */}
+      <div className="labels-row">
+        <div className="label">Popular Actors</div>
+      </div>
+      {/* SLIDER */}
+      <div className="scroll-container">
+        <button className="arrow left" onClick={prev} disabled={page === 0}>
+          ◀
+        </button>
+        <div className="scroll-row" ref={scrollRef}>
+          {people.map((p) => (
+            <div key={p.id || p.nconst} className="actor-card">
+              <img
+                src={p.photoUrl || p.photo}
+                alt={p.name}
+                className="actor-card-img"
+              />
+              <div className="rank">{p.name}</div>
+              {p.age && <div className="rank">Age: {p.age}</div>}
+              {p.rating && (
+                <div className="rank">
+                  Rating: <span>{p.rating}</span>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+        <button
+          className="arrow right"
+          onClick={next}
+          disabled={page === totalPages - 1}
+        >
+          ▶
+        </button>
+      </div>
+    </>
+  );
+};
+export default People;
