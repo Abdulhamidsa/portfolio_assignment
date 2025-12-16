@@ -10,6 +10,9 @@ import Signup from "./components/auth/Signup";
 import Logout from "./components/auth/Logout";
 import AppLayout from "./components/Layout/AppLayout";
 import UserBookmark from "./components/user/UserBookmark";
+import Browse from "./pages/Browse";
+import Catalog from "./pages/Catalog";
+import TitlePage from "./pages/TitlePage";
 
 const IndexRedirect = () => {
   const { authReady, isAuthenticated } = useAuthContext();
@@ -27,21 +30,12 @@ const App = () => {
       <Routes>
         <Route element={<AppLayout />}>
           <Route index element={<IndexRedirect />} />
-
           {/* Public */}
           <Route path="/signin" element={<Signin />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/logout" element={<Logout />} />
-
           {/* Protected */}
-          <Route
-            path="/home"
-            element={
-              <ProtectedRoute>
-                <Home />
-              </ProtectedRoute>
-            }
-          />
+          <Route path="/home" element={<Home />} />
           <Route
             path="/bookmarks"
             element={
@@ -50,6 +44,11 @@ const App = () => {
               </ProtectedRoute>
             }
           />
+          <Route path="/browse" element={<Browse />} />
+          <Route path="/catalog/:type" element={<Catalog />} />
+          <Route path="/catalog/:type/:genre" element={<Catalog />} />
+
+          <Route path="/title/:id" element={<TitlePage />} />
         </Route>
       </Routes>
     </AuthProvider>

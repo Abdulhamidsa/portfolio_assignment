@@ -4,6 +4,7 @@ import "./home.css";
 import useBookmarks from "../../hooks/useBookmarks";
 import { useAuthContext } from "../../hooks/useAuth";
 import People from "../People/People";
+import { useNavigate } from "react-router-dom";
 
 const INTERVAL = 9000;
 
@@ -32,6 +33,7 @@ const Home = () => {
   const [toggling, setToggling] = useState(null);
 
   const cursor = useRef(0);
+  const navigate = useNavigate();
 
   const { toggleBookmark, isBookmarked } = useBookmarks();
   const { isAuthenticated } = useAuthContext();
@@ -122,22 +124,44 @@ const Home = () => {
         <People />
       </section>
 
-      {/* MOVIE LIST */}
-      <div className="container mt-5">
-        <div className="row g-4">
+      {/* MOVIE CAROUSEL */}
+      <div className="movie-carousel-wrapper mt-5">
+        <h2 className="mb-4">Popular Movies</h2>
+        <button className="carousel-chevron left" onClick={() => document.getElementById("movie-carousel-track").scrollBy({ left: -400, behavior: "smooth" })} aria-label="Scroll left">
+          ‹
+        </button>
+
+        <div id="movie-carousel-track" className="movie-carousel-track">
           {movies.slice(0, 10).map((m) => {
             const bookmarked = isBookmarked(m.id);
-
             return (
-              <div key={m.id} className="col-md-6 col-lg-4">
+              <div
+                key={m.id}
+                className="movie-carousel-item"
+                onClick={() => navigate(`/title/${m.id}`)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") navigate(`/title/${m.id}`);
+                }}
+              >
+                {" "}
                 <div className="movie-card">
                   <div className="movie-poster" style={{ backgroundImage: `url(${m.poster})` }} />
 
                   <div className="movie-info">
                     <span className="movie-title">{m.title}</span>
 
-                    <button className="icon-btn bookmark" onClick={() => handleBookmarkToggle(m.id)} disabled={toggling === m.tconst} title={bookmarked ? "Remove bookmark" : "Bookmark"}>
-                      {toggling === m.tconst ? "…" : bookmarked ? "★" : "☆"}
+                    <button
+                      className="icon-btn"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleBookmarkToggle(m.id);
+                      }}
+                      disabled={toggling === m.id}
+                      aria-label="Bookmark"
+                    >
+                      {toggling === m.id ? "…" : bookmarked ? "★" : "☆"}
                     </button>
                   </div>
                 </div>
@@ -145,6 +169,10 @@ const Home = () => {
             );
           })}
         </div>
+
+        <button className="carousel-chevron right" onClick={() => document.getElementById("movie-carousel-track").scrollBy({ left: 400, behavior: "smooth" })} aria-label="Scroll right">
+          ›
+        </button>
       </div>
     </>
   );

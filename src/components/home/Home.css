@@ -121,3 +121,162 @@
     padding-bottom: 2.5rem;
   }
 }
+/* =========================
+   CAROUSEL WRAPPER
+========================= */
+
+.movie-carousel-wrapper {
+  position: relative;
+}
+
+/* =========================
+   TRACK
+========================= */
+
+.movie-carousel-track {
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  padding: 4px 32px 10px; /* space for chevrons */
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* hide scrollbar */
+.movie-carousel-track::-webkit-scrollbar {
+  display: none;
+}
+.movie-carousel-track {
+  scrollbar-width: none;
+}
+
+/* =========================
+   ITEM
+========================= */
+
+.movie-carousel-item {
+  scroll-snap-align: start;
+  flex: 0 0 220px;
+}
+
+/* =========================
+   CARD
+========================= */
+
+.movie-card {
+  background: #111;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.movie-poster {
+  width: 100%;
+  height: 300px;
+  background-size: cover;
+  background-position: center;
+}
+
+.movie-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  gap: 10px;
+}
+
+.movie-title {
+  font-size: 0.9rem;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* =========================
+   CHEVRONS
+========================= */
+
+.carousel-chevron {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 5;
+
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  border: none;
+
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  font-size: 1.6rem;
+  line-height: 1;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+}
+
+.carousel-chevron.left {
+  left: 0;
+}
+
+.carousel-chevron.right {
+  right: 0;
+}
+
+/* =========================
+   ICON BUTTON
+========================= */
+
+.icon-btn {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  width: 36px;
+  height: 36px;
+  color: #fff;
+  cursor: pointer;
+}
+
+.icon-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 992px) {
+  .movie-carousel-item {
+    flex-basis: 200px;
+  }
+  .movie-poster {
+    height: 270px;
+  }
+}
+
+@media (max-width: 576px) {
+  .movie-carousel-item {
+    flex-basis: 160px;
+  }
+  .movie-poster {
+    height: 230px;
+  }
+
+  /* hide chevrons on mobile, swipe only */
+  .carousel-chevron {
+    display: none;
+  }
+
+  .movie-carousel-track {
+    padding: 4px 12px 10px;
+  }
+}
+.movie-carousel-item {
+  cursor: pointer;
+}
