@@ -4,6 +4,9 @@ import "./home.css";
 import useBookmarks from "../../hooks/useBookmarks";
 import { useAuthContext } from "../../hooks/useAuth";
 
+
+
+
 const INTERVAL = 9000;
 
 const loadPoster = async (url) => {
