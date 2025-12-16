@@ -1,39 +1,76 @@
-import { useParams } from "react-router-dom";
-import useGetPersonProfile from "../hooks/useGetPersonProfile";
-
-export default function PersonProfile() {
-    //const { nconst } = useParams();
-    const nconst = "nm0424060"; // Example nconst for testing
-  const { person, loading, error } = useGetPersonProfile(nconst);
-  console.log("Person Data:", person);
-
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p style={{ color: "red" }}>{error}</p>;
-  if (!person) return <p>No data found</p>;
-
+import { useParams, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { ENDPOINTS } from "../util/endpoints";
+import "./personProfile.css";
+const PersonProfile = () => {
+  const { nconst } = useParams();
+  const navigate = useNavigate();
+  const [person, setPerson] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  useEffect(() => {
+    const fetchPerson = async () => {
+      try {
+        setLoading(true);
+        const res = await fetch(ENDPOINTS.get.GET_PERSON_BY_ID(nconst));
+        if (!res.ok) {
+          throw new Error("Failed to fetch person");
+        }
+        const data = await res.json();
+        setPerson(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchPerson();
+  }, [nconst]);
+  if (loading) return <div className="page">Loading…</div>;
+  if (error) return <div className="page">{error}</div>;
+  if (!person) return <div className="page">Person not found</div>;
   return (
-    <div style={{ padding: "20px" }}>
-      <h1>{person.name}</h1>
-
-      {person.photoUrl && (
+    <div className="page person-page">
+      {/* Back */}
+      <button className="back-btn" onClick={() => navigate(-1)}>
+        ← Back
+      </button>
+      {/* Header */}
+      <div className="person-header">
         <img
           src={person.photoUrl}
           alt={person.name}
-          style={{ width: "200px", borderRadius: "10px" }}
+          className="person-photo"
         />
-      )}
-
-      <p><strong>Birth Year:</strong> {person.birthYear ?? "Unknown"}</p>
-      <p><strong>Death Year:</strong> {person.deathYear ?? "Still alive"}</p>
-      <p><strong>Professions:</strong> {person.professions}</p>
-      <p><strong>Rating:</strong> {person.rating}</p>
-      <p><strong>Total Votes:</strong> {person.totalVotes}</p>
-
-      <h3>Known For</h3>
-      <p>{person.knownFor}</p>
-
-      <h3>Biography</h3>
-      <p>{person.bio}</p>
+        <div className="person-info">
+          <h1>{person.name}</h1>
+          <div className="professions">{person.professions}</div>
+          <div className="meta">
+            Born: {person.birthYear}
+            {person.deathYear && ` – ${person.deathYear}`}
+          </div>
+          <div className="rating">
+            ⭐ {person.rating}{" "}
+            <span className="votes">
+              ({person.totalVotes?.toLocaleString()} votes)
+            </span>
+          </div>
+          <div className="known-for">
+            <strong>Known for:</strong> {person.knownFor}
+          </div>
+        </div>
+      </div>
+      {/* Biography */}
+      <div className="section">
+        <h2>Biography</h2>
+        <p>{person.bio}</p>
+      </div>
+      {/* Awards */}
+      <div className="section">
+        <h2>Awards</h2>
+        <p>{person.awards}</p>
+      </div>
     </div>
   );
-}
+};
+export default PersonProfile;

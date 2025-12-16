@@ -10,6 +10,8 @@ import Signup from "./components/auth/Signup";
 import Logout from "./components/auth/Logout";
 import AppLayout from "./components/Layout/AppLayout";
 import UserBookmark from "./components/user/UserBookmark";
+import PersonProfile from "./pages/PersonProfile";
+
 
 const IndexRedirect = () => {
   const { authReady, isAuthenticated } = useAuthContext();
@@ -50,6 +52,15 @@ const App = () => {
               </ProtectedRoute>
             }
           />
+           {/* ✅ NEW: Person profile (Protected) */}
+          <Route
+            path="/people/:nconst"
+            element={
+              <ProtectedRoute>
+                <PersonProfile />
+              </ProtectedRoute>
+            }
+              />
         </Route>
       </Routes>
     </AuthProvider>
