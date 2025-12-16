@@ -13,6 +13,8 @@ import UserBookmark from "./components/user/UserBookmark";
 import Browse from "./pages/Browse";
 import Catalog from "./pages/Catalog";
 import TitlePage from "./pages/TitlePage";
+import PersonProfile from "./pages/PersonProfile";
+
 
 const IndexRedirect = () => {
   const { authReady, isAuthenticated } = useAuthContext();
@@ -49,6 +51,15 @@ const App = () => {
           <Route path="/catalog/:type/:genre" element={<Catalog />} />
 
           <Route path="/title/:id" element={<TitlePage />} />
+           {/* ✅ NEW: Person profile (Protected) */}
+          <Route
+            path="/people/:nconst"
+            element={
+              <ProtectedRoute>
+                <PersonProfile />
+              </ProtectedRoute>
+            }
+              />
         </Route>
       </Routes>
     </AuthProvider>
