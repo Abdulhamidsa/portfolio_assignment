@@ -25,3 +25,5 @@ dist-ssr
 .env
 
 README(LOCAL).MD
+
+.env

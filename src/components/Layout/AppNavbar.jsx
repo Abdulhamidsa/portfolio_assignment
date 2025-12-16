@@ -1,28 +1,43 @@
 import "./Layout.css";
 import { Navbar, Nav, Container } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { useAuthContext } from "../../hooks/useAuth";
+import SearchInput from "../home/SearchInput";
+import { useState } from "react";
+import { Search } from "react-bootstrap-icons";
+
+import { BookmarkFill, BoxArrowRight } from "react-bootstrap-icons";
 
 const AppNavbar = () => {
   const { user, isAuthenticated } = useAuthContext();
+  const [expanded, setExpanded] = useState(false);
+  console.log("User in Navbar:", user);
+  console.log("Is Authenticated in Navbar:", isAuthenticated);
+
+  const closeMenu = () => setExpanded(false);
 
   return (
-    <Navbar expand="lg" className="app-navbar position-fixed w-100 top-0 z-3 navbar-dark">
-      <Container>
-        <Navbar.Brand as={Link} to="/" className="brand">
+    <Navbar expanded={expanded} expand="lg" className="app-navbar position-fixed w-100 top-0 z-3 navbar-dark">
+      <Container className="nav-container">
+        <Navbar.Brand as={Link} to="/" className="brand" onClick={closeMenu}>
           MovieApp
         </Navbar.Brand>
 
-        <Navbar.Toggle className="d-lg-none" />
-
-        <Navbar.Collapse className="justify-content-end align-items-center gap-4">
-          <Nav className="gap-3">
+        <Navbar.Toggle aria-controls="main-navbar" className="d-lg-none ms-auto" onClick={() => setExpanded((prev) => !prev)} />
+        {isAuthenticated && user?.username && (
+          <div className="nav-welcome-mobile d-lg-none">
+            Welcome <span>{user.username}</span>
+          </div>
+        )}
+        <Navbar.Collapse id="main-navbar" className="navbar-collapse-custom">
+          <Nav className="nav-links">
             {!isAuthenticated && (
               <>
-                <Nav.Link as={Link} to="/signin" className="nav-link-custom">
+                <Nav.Link as={NavLink} to="/signin" onClick={closeMenu} className="nav-link-custom">
                   Sign In
                 </Nav.Link>
-                <Nav.Link as={Link} to="/signup" className="nav-link-custom">
+
+                <Nav.Link as={NavLink} to="/signup" onClick={closeMenu} className="nav-link-custom">
                   Sign Up
                 </Nav.Link>
               </>
@@ -30,28 +45,36 @@ const AppNavbar = () => {
 
             {isAuthenticated && (
               <>
-                <Nav.Link as={Link} to="/home" className="nav-link-custom">
+                <Nav.Link as={NavLink} to="/home" onClick={closeMenu} className="nav-link-custom">
                   Home
                 </Nav.Link>
-                {/* <Nav.Link as={Link} to="/movies" className="nav-link-custom">
-                  Movies
-                </Nav.Link> */}
-                {/* <Nav.Link as={Link} to="/profile" className="nav-link-custom">
-                  Profile
-                </Nav.Link> */}
-                <Nav.Link as={Link} to="/bookmarks" className="nav-link-custom">
-                  Bookmark
-                </Nav.Link>
-                <Nav.Link as={Link} to="/logout" className="nav-link-custom">
-                  Logout
+
+                <Nav.Link as={NavLink} to="/browse" onClick={closeMenu} className="nav-link-custom">
+                  Browse
                 </Nav.Link>
               </>
             )}
           </Nav>
 
           {isAuthenticated && user?.username && (
-            <div className="nav-welcome d-none d-lg-flex">
-              Welcome<span>{user.username}</span>
+            <div className="nav-right">
+              <div className="nav-search-wrapper">
+                <SearchInput />
+              </div>
+
+              <div className="nav-welcome d-none d-lg-flex">
+                Welcome <span>{user.username}</span>
+              </div>
+
+              <div className="nav-icons">
+                <Nav.Link as={NavLink} to="/bookmarks" onClick={closeMenu} className="nav-icon-link" title="Bookmarks" aria-label="Bookmarks">
+                  <BookmarkFill />
+                </Nav.Link>
+
+                <Nav.Link as={NavLink} to="/logout" onClick={closeMenu} className="nav-icon-link" title="Logout" aria-label="Logout">
+                  <BoxArrowRight />
+                </Nav.Link>
+              </div>
             </div>
           )}
         </Navbar.Collapse>

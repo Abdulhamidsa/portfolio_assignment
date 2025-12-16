@@ -7,11 +7,14 @@ export const ENDPOINTS = {
     LOGIN: `${API_BASE_URL}/Auth/login`,
     LOGOUT: `${API_BASE_URL}/Auth/logout`,
     TOGGLE_BOOKMARK: (tconst) => `${API_BASE_URL}/Bookmarks/toggle/${tconst}`,
+    POST_RATING: (tconst, rating) => `${API_BASE_URL}/rating/${tconst}/${rating}`,
   },
   get: {
     GET_ALL_TITLES: `${API_BASE_URL}/Titles/all`,
     GET_TITLE_BY_ID: (id) => `${API_BASE_URL}/Titles/${id}`,
-    SEARCH_TITLES: (query) => `${API_BASE_URL}/Titles/search?query=${encodeURIComponent(query)}`,
+    // SEARCH_TITLES: (query) => `${API_BASE_URL}/Titles/search?query=${encodeURIComponent(query)}`,
+    SEARCH_TITLES: (q) => `${API_BASE_URL}/Titles/search?q=${encodeURIComponent(q)}`,
+
     GET_POPULAR_PEOPLE: `${API_BASE_URL}/People/popular`,
     GET_PERSON_BY_ID: (nconst) => `${API_BASE_URL}/People/${nconst}`,
     GET_BOOKMARKS: `${API_BASE_URL}/Bookmarks`,

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { fetchPersonImage } from "../api/tmdb";
 import { ENDPOINTS } from "../util/endpoints";
 const useGetPeople = () => {
   const [people, setPeople] = useState([]);
@@ -10,16 +11,21 @@ const useGetPeople = () => {
       try {
         setLoading(true);
         const response = await fetch(ENDPOINTS.get.GET_POPULAR_PEOPLE);
-        if (response.ok) {
-            console.log('Fetch to popular people endpoint succeeded');
-        }
         if (!response.ok) {
           throw new Error("Failed to fetch people");
         }
+        const basePeople = await response.json();
 
-        const data = await response.json();
-         console.log(data,'this data');
-        setPeople(data);
+        // Add images from TMDB
+        const enrichedPeople = await Promise.all(
+          basePeople.map(async (p) => {
+            const photoUrl = await fetchPersonImage(p.nconst);
+            return { ...p, photoUrl };
+          })
+        );
+        console.log("Enriched People:", enrichedPeople);
+
+        setPeople(enrichedPeople);
       } catch (err) {
         setError(err.message);
       } finally {
