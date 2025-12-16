@@ -7,5 +7,9 @@ const PersonProfile = () => {
   const { nconst } = useParams();
   const navigate = useNavigate();
 
+  const [person, setPerson] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
   return null;
 };
