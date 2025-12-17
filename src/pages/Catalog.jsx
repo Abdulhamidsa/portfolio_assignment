@@ -2,7 +2,7 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Container } from "react-bootstrap";
 
-import { BROWSE_TYPES, PRIMARY_GENRES, SECONDARY_GENRES, TV_GENRES } from "../util/slugMap";
+import { BROWSE_TYPES } from "../util/slugMap";
 
 import "../components/browse/title.css";
 
@@ -24,8 +24,20 @@ const Catalog = () => {
 
     fetch(url)
       .then((res) => res.json())
-      .then((data) => {
-        setTitles(data.data || []);
+      .then((json) => {
+        if (!json.success || !Array.isArray(json.data)) {
+          console.error("Invalid catalog response:", json);
+          setTitles([]);
+          return;
+        }
+
+        setTitles(json.data);
+      })
+      .catch((err) => {
+        console.error("Catalog fetch failed:", err);
+        setTitles([]);
+      })
+      .finally(() => {
         setLoading(false);
       });
   }, [apiType, apiGenre]);
@@ -45,15 +57,7 @@ const Catalog = () => {
 
       <h2 className="mb-4 text-capitalize">{genre ? `${formatLabel(genre)} ${type}` : type}</h2>
 
-      {loading ? (
-        <p className="text-center">Loading…</p>
-      ) : (
-        <div className="titles-grid">
-          {cleanTitles.map((item) => (
-            <TitleCard key={item.id} item={item} onClick={() => navigate(`/title/${item.id}`)} />
-          ))}
-        </div>
-      )}
+      {loading ? <p className="text-center">Loading…</p> : <div className="titles-grid">{Array.isArray(cleanTitles) && cleanTitles.map((item, index) => <TitleCard key={`${item.id}-${index}`} item={item} onClick={() => navigate(`/title/${item.id}`)} />)}</div>}
     </Container>
   );
 };
