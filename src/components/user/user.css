@@ -4,6 +4,7 @@
   border: 1px solid var(--border-soft);
   box-shadow: var(--shadow-soft);
   color: var(--text-primary);
+  
 }
 
 /* Header */
@@ -64,3 +65,17 @@
   color: var(--text-primary);
   border-color: var(--accent-gold);
 }
+
+.bookmark-item:hover {
+  transform: scale(1.02);
+  transition: 0.3s ease-in-out;
+}
+.bookmark-loading {
+  text-align: center;
+  margin-top: 2rem;
+}
+.bookmark-empty {
+  text-align: center;
+  font-style: italic;
+}
+
