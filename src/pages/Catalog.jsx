@@ -15,6 +15,7 @@ const Catalog = () => {
 
   const [titles, setTitles] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [visibleCount, setVisibleCount] = useState(20);
 
   useEffect(() => {
     if (!apiType) return;
@@ -57,7 +58,25 @@ const Catalog = () => {
 
       <h2 className="mb-4 text-capitalize">{genre ? `${formatLabel(genre)} ${type}` : type}</h2>
 
-      {loading ? <p className="text-center">Loading…</p> : <div className="titles-grid">{Array.isArray(cleanTitles) && cleanTitles.map((item, index) => <TitleCard key={`${item.id}-${index}`} item={item} onClick={() => navigate(`/title/${item.id}`)} />)}</div>}
+      {loading ? (
+        <p className="text-center">Loading…</p>
+      ) : (
+        <>
+          <div className="titles-grid">
+            {cleanTitles.slice(0, visibleCount).map((item) => (
+              <TitleCard key={item.id} item={item} onClick={() => navigate(`/title/${item.id}`)} />
+            ))}
+          </div>
+
+          {visibleCount < cleanTitles.length && (
+            <div className="load-more-wrap">
+              <button className="load-more-btn" onClick={() => setVisibleCount((prev) => prev + 10)}>
+                Load more
+              </button>
+            </div>
+          )}
+        </>
+      )}
     </Container>
   );
 };
@@ -73,14 +92,14 @@ const TitleCard = ({ item, onClick }) => {
 
   return (
     <div className="title-card" onClick={onClick}>
-      <img className="poster" src={item.poster} alt={item.title} onError={() => setVisible(false)} />
+      <img className="poster" src={item.poster} alt={item.primarytitle} onError={() => setVisible(false)} />
 
       <div className="info">
-        <h5 className="name">{item.title}</h5>
+        <h5 className="name">{item.primarytitle}</h5>
         <div className="meta">
-          {item.year}
+          {item.startyear}
           <span className="dot">•</span>
-          {item.type}
+          {item.titletype}
         </div>
       </div>
     </div>
