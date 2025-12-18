@@ -40,9 +40,20 @@ const Home = () => {
 
   // Fetch movies once
   useEffect(() => {
-    fetch("http://localhost:5000/api/Titles/catalog?type=movie&genre=Action")
+    // Fetch all movies, not just Action
+    fetch("http://localhost:5000/api/Titles/catalog?type=movie")
       .then((r) => r.json())
-      .then((j) => j.success && setMovies(j.data || []))
+      .then((j) => {
+        if (j.success && Array.isArray(j.data) && j.data.length > 0) {
+          // Only movies with a valid poster
+          const withPoster = j.data.filter((m) => m.poster && m.poster !== "N/A");
+          // Shuffle for random hero
+          const shuffled = withPoster.sort(() => Math.random() - 0.5);
+          setMovies(shuffled);
+        } else {
+          setMovies([]);
+        }
+      })
       .catch(console.error);
   }, []);
 
@@ -112,8 +123,19 @@ const Home = () => {
             </p>
 
             <div className="hero-actions">
-              <button className="btn btn-warning fw-semibold">View details</button>
-              <button className="btn btn-outline-light">Browse catalog</button>
+              <button className="btn btn-warning text-white fw-semibold" onClick={() => navigate(`/title/${movie.id}`)}>
+                View details
+              </button>
+              <button
+                className="btn btn-outline-light"
+                onClick={() => {
+                  // genre slug: lowercased, spaces to dash
+                  const genreSlug = movie.genre ? movie.genre.toLowerCase().replace(/\s+/g, "-") : "";
+                  navigate(`/catalog/movies/${genreSlug}`);
+                }}
+              >
+                Browse catalog
+              </button>
             </div>
           </Container>
         </div>

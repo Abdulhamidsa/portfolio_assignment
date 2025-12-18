@@ -1,5 +1,5 @@
-import { useRef, useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom"; 
+import { useRef, useState, useLayoutEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import useGetPeople from "../../hooks/useGetPeople";
 import "./people.css";
 
@@ -12,14 +12,19 @@ const People = () => {
 
   const { people, loading, error } = useGetPeople();
 
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   // Calculate card width dynamically
-  useEffect(() => {
+  useLayoutEffect(() => {
     const firstCard = scrollRef.current?.querySelector(".actor-card");
-    if (firstCard) {
-      setCardWidth(firstCard.offsetWidth + 40); // card + gap
-    }
+    if (!firstCard) return;
+
+    const observer = new ResizeObserver(() => {
+      setCardWidth(firstCard.offsetWidth + 40);
+    });
+
+    observer.observe(firstCard);
+    return () => observer.disconnect();
   }, [people]);
 
   if (loading) return null;
@@ -56,7 +61,7 @@ const People = () => {
     <>
       {/* SECTION LABELS */}
       <div className="labels-row">
-        <div className="label">Popular Actors</div>
+        <h2 className="label">Popular Actors</h2>
       </div>
 
       {/* SLIDER */}
@@ -67,17 +72,8 @@ const People = () => {
 
         <div className="scroll-row" ref={scrollRef}>
           {people.map((p) => (
-            <div
-              key={p.id || p.nconst}
-              className="actor-card"
-              onClick={() => navigate(`/people/${p.nconst}`)} 
-              style={{ cursor: "pointer" }}                  
-            >
-              <img
-                src={p.photoUrl || p.photo}
-                alt={p.name}
-                className="actor-card-img"
-              />
+            <div key={p.id || p.nconst} className="actor-card" onClick={() => navigate(`/people/${p.nconst}`)} style={{ cursor: "pointer" }}>
+              <img src={p.photoUrl || p.photo} alt={p.name} className="actor-card-img" />
 
               <div className="rank">{p.name}</div>
 
@@ -92,11 +88,7 @@ const People = () => {
           ))}
         </div>
 
-        <button
-          className="arrow right"
-          onClick={next}
-          disabled={page === totalPages - 1}
-        >
+        <button className="arrow right" onClick={next} disabled={page === totalPages - 1}>
           ▶
         </button>
       </div>

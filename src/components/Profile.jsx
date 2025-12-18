@@ -15,9 +15,12 @@ function Profile() {
   return (
     <div className="container mt-4">
       <h2>Welcome, {user.username || user.email}!</h2>
-      <p><strong>Email:</strong> {user.email}</p>
-      {/* Add more user info if available */}
-      <p><strong>User ID:</strong> {user.id}</p>
+      <p>
+        <strong>Email:</strong> {user.email}
+      </p>
+      <p>
+        <strong>User ID:</strong> {user.id}
+      </p>
     </div>
   );
 }

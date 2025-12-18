@@ -31,8 +31,8 @@ const Browse = () => {
       <h2 className="mb-4 text-center">Browse</h2>
 
       {/* BY TYPE */}
-      <h5 className="browse-section-title">By Type</h5>
-      <Row className="mb-5">
+      {/* <h5 className="browse-section-title">By Type</h5> */}
+      {/* <Row className="mb-5">
         {Object.keys(BROWSE_TYPES).map((key) => (
           <Col md={6} className="mb-4" key={key}>
             <Card className="browse-card" onClick={() => navigate(`/catalog/${key}`)}>
@@ -43,7 +43,7 @@ const Browse = () => {
             </Card>
           </Col>
         ))}
-      </Row>
+      </Row> */}
 
       {/* BY GENRE */}
       <h5 className="browse-section-title">By Genre</h5>

@@ -4,8 +4,6 @@ import { Link, NavLink } from "react-router-dom";
 import { useAuthContext } from "../../hooks/useAuth";
 import SearchInput from "../home/SearchInput";
 import { useState } from "react";
-import { Search } from "react-bootstrap-icons";
-
 import { BookmarkFill, BoxArrowRight } from "react-bootstrap-icons";
 
 const AppNavbar = () => {
@@ -31,26 +29,21 @@ const AppNavbar = () => {
         )}
         <Navbar.Collapse id="main-navbar" className="navbar-collapse-custom">
           <Nav className="nav-links">
+            <Nav.Link as={NavLink} to="/home" onClick={closeMenu} className="nav-link-custom">
+              Home
+            </Nav.Link>
+
+            <Nav.Link as={NavLink} to="/browse" onClick={closeMenu} className="nav-link-custom">
+              Browse
+            </Nav.Link>
             {!isAuthenticated && (
               <>
-                <Nav.Link as={NavLink} to="/signin" onClick={closeMenu} className="nav-link-custom">
+                <Nav.Link as={NavLink} to="/signin" onClick={closeMenu} className="nav-link-custom me-auto">
                   Sign In
                 </Nav.Link>
 
                 <Nav.Link as={NavLink} to="/signup" onClick={closeMenu} className="nav-link-custom">
                   Sign Up
-                </Nav.Link>
-              </>
-            )}
-
-            {isAuthenticated && (
-              <>
-                <Nav.Link as={NavLink} to="/home" onClick={closeMenu} className="nav-link-custom">
-                  Home
-                </Nav.Link>
-
-                <Nav.Link as={NavLink} to="/browse" onClick={closeMenu} className="nav-link-custom">
-                  Browse
                 </Nav.Link>
               </>
             )}

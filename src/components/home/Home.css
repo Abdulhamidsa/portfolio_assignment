@@ -1,6 +1,6 @@
 .hero {
   position: relative;
-  height: 72vh;
+  height: 40vh;
   min-height: 520px;
   overflow: hidden;
   background-color: var(--bg-main);
@@ -11,9 +11,9 @@
   position: absolute;
   inset: 0;
   background-size: cover;
-  background-position: center;
+  background-position: top;
   background-repeat: no-repeat;
-
+  height: 40dvh;
   animation: hero-fade 1.2s ease-in-out;
   transform: scale(1.03);
 }
@@ -175,6 +175,7 @@
   height: 300px;
   background-size: cover;
   background-position: center;
+  object-fit: cover;
 }
 
 .movie-info {

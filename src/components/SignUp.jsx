@@ -38,51 +38,27 @@ function SignUp({ apiClient }) {
       {/* Username */}
       <Form.Group className="mb-3" controlId="signupUsername">
         <Form.Label>Username</Form.Label>
-        <Form.Control
-          type="text"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          required
-        />
-        <Form.Text className="text-muted">
-          Your data is protected from third-party access.
-        </Form.Text>
+        <Form.Control type="text" value={username} onChange={(e) => setUsername(e.target.value)} required className="form-control-dark" />
+        <Form.Text className="text-muted">Your data is protected from third-party access.</Form.Text>
       </Form.Group>
 
       {/* Email */}
       <Form.Group className="mb-3" controlId="signupEmail">
         <Form.Label>Email</Form.Label>
-        <Form.Control
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <Form.Text className="text-muted">
-          Your data is protected from third-party access.
-        </Form.Text>
+        <Form.Control type="email" value={email} onChange={(e) => setEmail(e.target.value)} required className="form-control-dark" />
+        <Form.Text className="text-muted">Your data is protected from third-party access.</Form.Text>
       </Form.Group>
 
       {/* Password */}
       <Form.Group className="mb-3" controlId="signupPassword">
         <Form.Label>Password</Form.Label>
-        <Form.Control
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
+        <Form.Control type="password" value={password} onChange={(e) => setPassword(e.target.value)} required className="form-control-dark" />
       </Form.Group>
 
       {/* Confirm Password */}
       <Form.Group className="mb-3" controlId="signupConfirmPassword">
         <Form.Label>Confirm Password</Form.Label>
-        <Form.Control
-          type="password"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-          required
-        />
+        <Form.Control type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required className="form-control-dark" />
       </Form.Group>
 
       <Button type="submit" variant="success">
