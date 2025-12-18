@@ -10,8 +10,8 @@ const Signin = () => {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    emailOrUsername: "a@a.com",
-    password: "Aboood166",
+    emailOrUsername: "",
+    password: "",
   });
 
   const handleInputChange = (e) => {

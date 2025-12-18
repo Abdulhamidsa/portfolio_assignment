@@ -69,7 +69,7 @@ const Catalog = () => {
           </div>
 
           {visibleCount < cleanTitles.length && (
-            <div className="load-more-wrap">
+            <div className="load-more-wrap text-center mt-4">
               <button className="load-more-btn" onClick={() => setVisibleCount((prev) => prev + 10)}>
                 Load more
               </button>
@@ -87,19 +87,20 @@ const Catalog = () => {
 
 const TitleCard = ({ item, onClick }) => {
   const [visible, setVisible] = useState(true);
+  console.log(item);
 
   if (!visible) return null;
 
   return (
     <div className="title-card" onClick={onClick}>
-      <img className="poster" src={item.poster} alt={item.primarytitle} onError={() => setVisible(false)} />
+      <img className="poster" src={item.poster} alt={item.title} onError={() => setVisible(false)} />
 
       <div className="info">
-        <h5 className="name">{item.primarytitle}</h5>
+        <h5 className="name">{item.title}</h5>
         <div className="meta">
-          {item.startyear}
+          {item.year}
           <span className="dot">•</span>
-          {item.titletype}
+          {item.type}
         </div>
       </div>
     </div>

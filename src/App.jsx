@@ -15,15 +15,14 @@ import Catalog from "./pages/Catalog";
 import TitlePage from "./pages/TitlePage";
 import PersonProfile from "./pages/PersonProfile";
 
-
 const IndexRedirect = () => {
-  const { authReady, isAuthenticated } = useAuthContext();
+  const { authReady } = useAuthContext();
 
   if (!authReady) {
     return null;
   }
 
-  return <Navigate to={isAuthenticated ? "/home" : "/signin"} replace />;
+  return <Navigate to={"/home"} replace />;
 };
 
 const App = () => {
@@ -36,22 +35,11 @@ const App = () => {
           <Route path="/signin" element={<Signin />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/logout" element={<Logout />} />
-          {/* Protected */}
-          <Route path="/home" element={<Home />} />
-          <Route
-            path="/bookmarks"
-            element={
-              <ProtectedRoute>
-                <UserBookmark />
-              </ProtectedRoute>
-            }
-          />
           <Route path="/browse" element={<Browse />} />
           <Route path="/catalog/:type" element={<Catalog />} />
           <Route path="/catalog/:type/:genre" element={<Catalog />} />
 
           <Route path="/title/:id" element={<TitlePage />} />
-           {/* ✅ NEW: Person profile (Protected) */}
           <Route
             path="/people/:nconst"
             element={
@@ -59,8 +47,18 @@ const App = () => {
                 <PersonProfile />
               </ProtectedRoute>
             }
-              />
+          />
+          <Route path="/home" element={<Home />} />
         </Route>
+        {/* Protected */}
+        <Route
+          path="/bookmarks"
+          element={
+            <ProtectedRoute>
+              <UserBookmark />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </AuthProvider>
   );
